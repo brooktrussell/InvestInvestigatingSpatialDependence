@@ -60,10 +60,6 @@ ChiCalc<-function(x,y,qtile=.97){#P(y>u|x>u)
 
 #begin simulations
 #for alpha=.35,.85
-nsim <- 1000
-nobs_vec <- seq(500,7500,by=500)
-library(evd)
-
 set.seed(1)
 gammaBar_hat_distMat <- matrix(NA,nsim,length(nobs_vec))
 chi_hat_distMat <- matrix(NA,nsim,length(nobs_vec))
@@ -78,9 +74,9 @@ for (i in 1:nsim){
 
 pdf(file="SimStudyBoxPlots_HighDep_12042025.pdf",w=8.5,h=9)
 par(mfrow=c(2,1))
-boxplot(c(gammaBar_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.55,.9),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
+boxplot(c(gammaBar_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.45,.95),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
-boxplot(c(chi_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.55,.9),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
+boxplot(c(chi_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.45,.95),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
 dev.off()
 
@@ -97,8 +93,8 @@ for (i in 1:nsim){
 
 pdf(file="SimStudyBoxPlots_LowDep_12042025.pdf",w=8.5,h=9)
 par(mfrow=c(2,1))
-boxplot(c(gammaBar_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.025,.45),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
+boxplot(c(gammaBar_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.55),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
-boxplot(c(chi_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.025,.45),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
+boxplot(c(chi_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.55),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
 dev.off()
