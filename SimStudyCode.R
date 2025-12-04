@@ -60,6 +60,11 @@ ChiCalc<-function(x,y,qtile=.97){#P(y>u|x>u)
 
 #begin simulations
 #for alpha=.35,.85
+#for alpha=.35,.85
+nsim <- 10000
+nobs_vec <- seq(500,7500,by=500)
+library(evd)
+
 set.seed(1)
 gammaBar_hat_distMat <- matrix(NA,nsim,length(nobs_vec))
 chi_hat_distMat <- matrix(NA,nsim,length(nobs_vec))
@@ -74,27 +79,27 @@ for (i in 1:nsim){
 
 pdf(file="SimStudyBoxPlots_HighDep_12042025.pdf",w=8.5,h=9)
 par(mfrow=c(2,1))
-boxplot(c(gammaBar_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.45,.95),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
+boxplot(c(gammaBar_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.44,.96),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
-boxplot(c(chi_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.45,.95),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
+boxplot(c(chi_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.44,.96),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
 dev.off()
 
-gammaBar_hat_distMat <- matrix(NA,nsim,length(nobs_vec))
-chi_hat_distMat <- matrix(NA,nsim,length(nobs_vec))
+gammaBar_hat_distMat2 <- matrix(NA,nsim,length(nobs_vec))
+chi_hat_distMat2 <- matrix(NA,nsim,length(nobs_vec))
 #for alpha=.85
 for (i in 1:nsim){
   for (j in 1:length(nobs_vec)){
     trashdat <- rbvevd(nobs_vec[j],dep=.85,model="log",mar1 = c(1,1,1),mar2=c(1,1,1))
-    gammaBar_hat_distMat[i,j] <- ChiCalc(trashdat[,1],trashdat[,2],qtile=.95)$chi.hat
-    chi_hat_distMat[i,j] <- 1 - GammaCalc(trashdat[,1],trashdat[,2],qtile=.95)$gamma.hat
+    gammaBar_hat_distMat2[i,j] <- ChiCalc(trashdat[,1],trashdat[,2],qtile=.95)$chi.hat
+    chi_hat_distMat2[i,j] <- 1 - GammaCalc(trashdat[,1],trashdat[,2],qtile=.95)$gamma.hat
   }
 }
 
 pdf(file="SimStudyBoxPlots_LowDep_12042025.pdf",w=8.5,h=9)
 par(mfrow=c(2,1))
-boxplot(c(gammaBar_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.55),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
+boxplot(c(gammaBar_hat_distMat2)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.6),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
-boxplot(c(chi_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.55),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
+boxplot(c(chi_hat_distMat2)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.6),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
 dev.off()
