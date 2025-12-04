@@ -60,7 +60,7 @@ ChiCalc<-function(x,y,qtile=.97){#P(y>u|x>u)
 
 #begin simulations
 #for alpha=.35,.85
-nsim <- 100
+nsim <- 1000
 nobs_vec <- seq(500,7500,by=500)
 library(evd)
 
