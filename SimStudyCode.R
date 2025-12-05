@@ -103,3 +103,52 @@ axis(1,at=1:length(nobs_vec),labels=nobs_vec)
 boxplot(c(chi_hat_distMat2)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.6),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
 dev.off()
+
+
+
+
+#################################
+#Simulate two data sets, one with high AD and one with low AD
+
+library(evd)
+
+unitFr<-function(dat.vec){n<-length(na.omit(dat.vec))
+trash.rank<-rank(dat.vec)
+U<-ifelse(is.na(dat.vec)==TRUE,NA,trash.rank/(n+1))
+F<- -1/log(U);return(F)}
+
+angdist_log <- function(w,a){.5*(1/a - 1)*(w*(1-w))^(-1 - 1/a)*(w^(-1/a) + (1-w)^(-1/a))^(a-2)}
+angdist_log <- Vectorize(angdist_log)
+
+wseq <- seq(.01,.99,length=100)
+
+set.seed(3)
+sim1_gum <- rbvevd(1000,dep=.35,model="log")
+sim1_frech <- apply(sim1_gum,2,FUN=unitFr)
+hist_dat <- sim1_frech[which(rowSums(sim1_frech) > quantile(rowSums(sim1_frech),.95)),]
+pdf(file="~/Downloads/Sim1_plots.pdf",w=8.5,h=3.3)
+par(mfrow=c(1,3),mar = c(5.1, 4.1, 4.1, 2.1))
+plot(sim1_gum,xlab=expression(X[1]),ylab=expression(X[2]))
+plot(sim1_frech,xlab=expression(Y[1]),ylab=expression(Y[2]))
+hist(hist_dat[,1]/rowSums(hist_dat),main="",ylim=c(0,2.35),freq = FALSE,xlab="Angular Component",breaks=seq(0,1,by=.2))
+lines(wseq,angdist_log(wseq,a=.35))
+dev.off()
+1-c(unlist(GammaCalc(sim1_frech,.95)))
+ChiCalc(sim1_frech,.95)
+2 - 2^.35
+
+
+set.seed(3)
+sim1_gum <- rbvevd(1000,dep=.85,model="log")
+sim1_frech <- apply(sim1_gum,2,FUN=unitFr)
+hist_dat <- sim1_frech[which(rowSums(sim1_frech) > quantile(rowSums(sim1_frech),.95)),]
+pdf(file="~/Downloads/Sim2_plots.pdf",w=8.5,h=3.3)
+par(mfrow=c(1,3),mar = c(5.1, 4.1, 4.1, 2.1))
+plot(sim1_gum,xlab=expression(X[1]),ylab=expression(X[2]))
+plot(sim1_frech,xlab=expression(Y[1]),ylab=expression(Y[2]))
+hist(hist_dat[,1]/rowSums(hist_dat),main="",ylim=c(0,2.25),freq = FALSE,xlab="Angular Component",breaks=seq(0,1,by=.2))
+lines(wseq,angdist_log(wseq,a=.85))
+dev.off()
+1-c(unlist(GammaCalc(sim1_frech,.95)))
+ChiCalc(sim1_frech,.95)
+2 - 2^.85
