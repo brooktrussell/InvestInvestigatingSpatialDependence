@@ -150,3 +150,28 @@ dev.off()
 1-c(unlist(GammaCalc(sim1_frech,.95)))
 ChiCalc(sim1_frech,.95)
 2 - 2^.85
+
+
+nsims <- 50
+useq <- seq(.9,.999,by=.001)
+
+gamma_norm_mat <- matrix(NA,nsims,length(useq))
+chi_norm_mat <- matrix(NA,nsims,length(useq))
+
+library(mvtnorm)
+
+set.seed(1)
+for (i in 1:nsims){
+  for (j in 1:length(useq)){
+    bvn_dat <- rmvnorm(50000,sigma = matrix(c(1,.6,.6,1),2,2))
+    gamma_norm_mat[i,j] <- GammaCalc(bvn_dat[,1],bvn_dat[,2],qtile=useq[j])$gamma.hat
+    chi_norm_mat[i,j] <- ChiCalc(bvn_dat[,1],bvn_dat[,2],qtile=useq[j])$chi.hat
+  }
+}
+
+
+pdf(file="~/Downloads/NormalAsyDep_122025.pdf",8.5,4.5)
+par(mfrow=c(1,2))
+matplot(y=1-t(gamma_norm_mat),x=useq,type="l",lty=1,col="gray",xlab="Quantile",ylab=expression(hat(bar(gamma))))
+matplot(y=t(chi_norm_mat),x=useq,type="l",lty=1,col="gray",xlab="Quantile",ylab=expression(hat(chi)))
+dev.off()
