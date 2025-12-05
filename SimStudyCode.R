@@ -122,7 +122,6 @@ angdist_log <- Vectorize(angdist_log)
 
 wseq <- seq(.01,.99,length=100)
 
-set.seed(3)
 sim1_gum <- rbvevd(1000,dep=.35,model="log")
 sim1_frech <- apply(sim1_gum,2,FUN=unitFr)
 hist_dat <- sim1_frech[which(rowSums(sim1_frech) > quantile(rowSums(sim1_frech),.95)),]
@@ -138,7 +137,6 @@ ChiCalc(sim1_frech,.95)
 2 - 2^.35
 
 
-set.seed(3)
 sim1_gum <- rbvevd(1000,dep=.85,model="log")
 sim1_frech <- apply(sim1_gum,2,FUN=unitFr)
 hist_dat <- sim1_frech[which(rowSums(sim1_frech) > quantile(rowSums(sim1_frech),.95)),]
