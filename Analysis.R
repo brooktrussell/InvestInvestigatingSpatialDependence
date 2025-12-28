@@ -1,5 +1,5 @@
-load(file="~/Downloads/Objects.RData")
-load(file="~/Downloads/PRISMelevation.RData")
+load(file="Objects.RData")
+load(file="PRISMelevation.RData")
 
 
 library(maps)
