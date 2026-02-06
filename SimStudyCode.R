@@ -62,7 +62,7 @@ ChiCalc<-function(x,y,qtile=.97){#P(y>u|x>u)
 #for alpha=.35,.85
 #for alpha=.35,.85
 nsim <- 10000
-nobs_vec <- seq(500,7500,by=500)
+nobs_vec <- c(500,1000,2000,4000,8000)#seq(500,7500,by=500)
 library(evd)
 
 set.seed(1)
