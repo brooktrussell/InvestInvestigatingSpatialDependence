@@ -62,7 +62,7 @@ ChiCalc<-function(x,y,qtile=.97){#P(y>u|x>u)
 #for alpha=.35,.85
 #for alpha=.35,.85
 nsim <- 10000
-nobs_vec <- c(500,1000,2000,4000,8000)#seq(500,7500,by=500)
+nobs_vec <- c(1250,2500,5000,10000)#seq(500,7500,by=500)
 library(evd)
 
 set.seed(1)
@@ -72,8 +72,8 @@ chi_hat_distMat <- matrix(NA,nsim,length(nobs_vec))
 for (i in 1:nsim){
   for (j in 1:length(nobs_vec)){
     trashdat <- rbvevd(nobs_vec[j],dep=.35,model="log",mar1 = c(1,1,1),mar2=c(1,1,1))
-    gammaBar_hat_distMat[i,j] <- ChiCalc(trashdat[,1],trashdat[,2],qtile=.95)$chi.hat
-    chi_hat_distMat[i,j] <- 1 - GammaCalc(trashdat[,1],trashdat[,2],qtile=.95)$gamma.hat
+    gammaBar_hat_distMat[i,j] <- ChiCalc(trashdat[,1],trashdat[,2],qtile=.99)$chi.hat
+    chi_hat_distMat[i,j] <- 1 - GammaCalc(trashdat[,1],trashdat[,2],qtile=.99)$gamma.hat
   }
 }
 
@@ -91,8 +91,8 @@ chi_hat_distMat2 <- matrix(NA,nsim,length(nobs_vec))
 for (i in 1:nsim){
   for (j in 1:length(nobs_vec)){
     trashdat <- rbvevd(nobs_vec[j],dep=.85,model="log",mar1 = c(1,1,1),mar2=c(1,1,1))
-    gammaBar_hat_distMat2[i,j] <- ChiCalc(trashdat[,1],trashdat[,2],qtile=.95)$chi.hat
-    chi_hat_distMat2[i,j] <- 1 - GammaCalc(trashdat[,1],trashdat[,2],qtile=.95)$gamma.hat
+    gammaBar_hat_distMat2[i,j] <- ChiCalc(trashdat[,1],trashdat[,2],qtile=.99)$chi.hat
+    chi_hat_distMat2[i,j] <- 1 - GammaCalc(trashdat[,1],trashdat[,2],qtile=.99)$gamma.hat
   }
 }
 
@@ -104,6 +104,27 @@ boxplot(c(chi_hat_distMat2)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.6),xaxt=
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
 dev.off()
 
+angdist_log <- function(w,a){.5*(1/a - 1)*(w*(1-w))^(-1 - 1/a)*(w^(-1/a) + (1-w)^(-1/a))^(a-2)}
+angdist_log <- Vectorize(angdist_log)
+
+pdf(file="SimStudyBoxPlots.pdf",w=8.5,h=9)
+par(mfrow=c(2,2))
+boxplot(c(gammaBar_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.35,1),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
+axis(1,at=1:length(nobs_vec),labels=nobs_vec)
+integrand <- function(x) {abs(2*x-1)*angdist_log(x,a=0.35)}
+abline(h=1 - integrate(integrand,lower=0,upper=1)$value)
+boxplot(c(chi_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.35,1),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
+axis(1,at=1:length(nobs_vec),labels=nobs_vec)
+abline(h=2-2^.35)
+#
+boxplot(c(gammaBar_hat_distMat2)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.75),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
+axis(1,at=1:length(nobs_vec),labels=nobs_vec)
+integrand <- function(x) {abs(2*x-1)*angdist_log(x,a=0.85)}
+abline(h=1 - integrate(integrand,lower=0,upper=1)$value)
+boxplot(c(chi_hat_distMat2)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.75),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
+axis(1,at=1:length(nobs_vec),labels=nobs_vec)
+abline(h=2-2^.85)
+dev.off()
 
 
 
