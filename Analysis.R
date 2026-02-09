@@ -386,3 +386,8 @@ ml_fit_7 <- likfit(geodata,
                    cov.model = "exponential",
                    ini.cov.pars = c(.15, 100)) # Initial guesses for (partial sill, range)
 AIC(ml_fit_7)
+
+
+
+
+
