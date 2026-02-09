@@ -109,19 +109,19 @@ angdist_log <- Vectorize(angdist_log)
 
 pdf(file="SimStudyBoxPlots.pdf",w=8.5,h=9)
 par(mfrow=c(2,2))
-boxplot(c(gammaBar_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.35,1),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
+boxplot(c(gammaBar_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,1),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
 integrand <- function(x) {abs(2*x-1)*angdist_log(x,a=0.35)}
 abline(h=1 - integrate(integrand,lower=0,upper=1)$value)
-boxplot(c(chi_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(.35,1),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
+boxplot(c(chi_hat_distMat)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,1),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
 abline(h=2-2^.35)
 #
-boxplot(c(gammaBar_hat_distMat2)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.75),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
+boxplot(c(gammaBar_hat_distMat2)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,1),xaxt="n",xlab="Sample Size",ylab=expression(hat(bar(gamma))))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
 integrand <- function(x) {abs(2*x-1)*angdist_log(x,a=0.85)}
 abline(h=1 - integrate(integrand,lower=0,upper=1)$value)
-boxplot(c(chi_hat_distMat2)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,.75),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
+boxplot(c(chi_hat_distMat2)~rep(1:length(nobs_vec),each=nsim),ylim=c(0,1),xaxt="n",xlab="Sample Size",ylab=expression(hat(chi)))
 axis(1,at=1:length(nobs_vec),labels=nobs_vec)
 abline(h=2-2^.85)
 dev.off()
